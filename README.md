@@ -1,6 +1,6 @@
 <h1>Wimbi Radio</h1>
 
-![Wimbi_Radio logo](img/logo.jpg)
+![Wimbi_Radio logo](img/logo.png)
 
 Wimbi means “wave” in Swahili — a fitting name for a radio designed to cross boundaries and connect signals from around the world.
 
