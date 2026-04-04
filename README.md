@@ -25,4 +25,4 @@ This project includes and uses third-party open-source libraries.
 Users must comply with the licenses of these libraries when using,
 modifying, or distributing this software.
 
-Full license texts are available in the respective library repositories and in /License folder. 
+Full license texts are available in the respective library repositories and in /licenses folder. 
