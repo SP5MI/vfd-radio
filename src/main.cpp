@@ -11,6 +11,9 @@
 #include "audio_task.h"     // AudioCmd_t, qAudioCmds
 #include "radio_task.h"     // RadioCmd_t, qRadioCmds
 #include "web_task.h"       // taskWeb
+#include "ui_task.h"        // taskUI
+#include "wifi_task.h"      // taskWiFi
+#include "display_task.h"   // taskDisplay
 
 // =============================================================================
 // PINY
@@ -61,7 +64,7 @@ void initState() {
     gState.wifiConnected = false;
     strncpy((char*)gState.stationName, "--------", sizeof(gState.stationName));
     strncpy((char*)gState.rdsText,     "",         sizeof(gState.rdsText));
-    strncpy((char*)gState.streamUrl,   "http://stream.example.com/radio", sizeof(gState.streamUrl));
+    strncpy((char*)gState.streamUrl,   "https://media.wnet.fm/wnet.fm", sizeof(gState.streamUrl));
 }
 
 // =============================================================================
@@ -78,11 +81,7 @@ SemaphoreHandle_t xI2CMutex;    // ochrona magistrali I2C
 // DEKLARACJE TASKÓW
 // =============================================================================
 
-void taskAudio(void *pvParameters);     // rdzeń 0 — strumieniowanie audio I2S
-void taskRadioRF(void *pvParameters);   // rdzeń 0 — obsługa SI4732
-void taskUI(void *pvParameters);        // rdzeń 1 — logika UI, przełączanie trybów
-void taskDisplay(void *pvParameters);   // rdzeń 1 — wysyłanie danych do VFD
-void taskWiFi(void *pvParameters);      // rdzeń 1 — Wi-Fi, lista stacji
+// Taski — deklaracje przez include nagłówków powyżej
 
 // =============================================================================
 // POMOCNICZE
@@ -171,31 +170,8 @@ void loop() {
 
 // taskRadioRF — implementacja w radio_task.cpp
 
-void taskUI(void *pvParameters) {
-    // TODO: obsługa enkodera (przerwania lub polling)
-    // TODO: obsługa touch (touchRead())
-    // TODO: logika przełączania trybów, zmiana częstotliwości
-    Serial.println("[UITask] started");
-    UIEvent_t event;
-    for(;;) {
-        if (xQueueReceive(qUIEvents, &event, pdMS_TO_TICKS(100)) == pdTRUE) {
-            // obsługa zdarzeń — do implementacji
-        }
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
-}
+// taskUI — implementacja w ui_task.cpp
 
-void taskDisplay(void *pvParameters) {
-    // TODO: odbieranie DisplayCmd z kolejki
-    // TODO: wysyłanie przez I2C do Arduino Pro Mini
-    Serial.println("[DisplayTask] started");
-    DisplayCmd_t cmd;
-    for(;;) {
-        if (xQueueReceive(qDisplayCmds, &cmd, pdMS_TO_TICKS(100)) == pdTRUE) {
-            // wyślij do Arduino — do implementacji
-        }
-        vTaskDelay(pdMS_TO_TICKS(20));
-    }
-}
+// taskDisplay — implementacja w display_task.cpp
 
 // taskWiFi — implementacja w wifi_task.cpp
