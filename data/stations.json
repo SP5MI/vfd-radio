@@ -1,0 +1,7 @@
+[
+  {"name": "RMF FM",    "url": "http://195.150.20.242:8000/rmf_fm"},
+  {"name": "Radio ZET", "url": "http://n-22-13.dcs.redcdn.pl/sc/o2/Eurozet/live/audio.livx"},
+  {"name": "Trójka",    "url": "http://stream3.polskieradio.pl:8904/"},
+  {"name": "PR1",       "url": "http://stream3.polskieradio.pl:8900/"},
+  {"name": "PR2",       "url": "http://stream3.polskieradio.pl:8902/"}
+]

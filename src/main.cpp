@@ -5,11 +5,12 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include <freertos/FreeRTOS.h>
-#include "wifi_config.h"
 #include <freertos/task.h>
-#include <freertos/queue.h>
-#include <freertos/semphr.h>
+#include "wifi_config.h"
+#include "radio_state.h"   // RadioState_t, UIEvent_t, DisplayCmd_t, gState
+#include "audio_task.h"     // AudioCmd_t, qAudioCmds
+#include "radio_task.h"     // RadioCmd_t, qRadioCmds
+#include "web_task.h"       // taskWeb
 
 // =============================================================================
 // PINY
@@ -49,33 +50,6 @@
 #define I2C_ADDR_SI4732     0x11    // gdy SENB → VCC (SI4732-A10)
 #define I2C_ADDR_ARDUINO    0x27    // Arduino Pro Mini (slave VFD)
 
-// =============================================================================
-// TRYBY PRACY
-// =============================================================================
-
-typedef enum {
-    MODE_INTERNET_RADIO = 0,
-    MODE_FM,
-    MODE_AM,
-    MODE_SW,
-    MODE_SSB_LSB,
-    MODE_SSB_USB
-} RadioMode_t;
-
-// =============================================================================
-// STAN GLOBALNY
-// =============================================================================
-
-typedef struct {
-    RadioMode_t mode;           // aktualny tryb
-    uint32_t    frequency;      // częstotliwość w kHz (FM: 87500 = 87.5 MHz)
-    uint8_t     volume;         // 0–63 (skala SI4732) / 0–100 (audio I2S)
-    bool        muted;          // wyciszenie
-    char        stationName[9]; // RDS PS (8 znaków + null)
-    char        rdsText[65];    // RDS RadioText (64 znaki + null)
-    char        streamUrl[256]; // URL aktualnego streamu internetowego
-    bool        wifiConnected;
-} RadioState_t;
 
 volatile RadioState_t gState;
 
@@ -94,24 +68,7 @@ void initState() {
 // KOLEJKI I SEMAFORY FREERTOS
 // =============================================================================
 
-// Zdarzenia UI → logika (enkoder, touch)
-typedef enum {
-    UI_EVENT_ENC_CW = 0,    // enkoder w prawo
-    UI_EVENT_ENC_CCW,        // enkoder w lewo
-    UI_EVENT_ENC_PRESS,      // przycisk enkodera
-    UI_EVENT_TOUCH_1,
-    UI_EVENT_TOUCH_2,
-    UI_EVENT_TOUCH_3,
-    UI_EVENT_TOUCH_4,
-    UI_EVENT_TOUCH_5,
-    UI_EVENT_TOUCH_6,
-} UIEvent_t;
 
-// Komendy dla wyświetlacza VFD
-typedef struct {
-    char line1[17];     // 16 znaków + null
-    char line2[17];     // dla ewentualnego 2-liniowego VFD
-} DisplayCmd_t;
 
 QueueHandle_t   qUIEvents;      // UI → UITask
 QueueHandle_t   qDisplayCmds;   // UITask → DisplayTask
@@ -174,9 +131,11 @@ void setup() {
     // --- Kolejki FreeRTOS ---
     qUIEvents    = xQueueCreate(16, sizeof(UIEvent_t));
     qDisplayCmds = xQueueCreate(8,  sizeof(DisplayCmd_t));
+    qAudioCmds   = xQueueCreate(8,  sizeof(AudioCmd_t));
+    qRadioCmds   = xQueueCreate(8,  sizeof(RadioCmd_t));
     xI2CMutex    = xSemaphoreCreateMutex();
 
-    if (!qUIEvents || !qDisplayCmds || !xI2CMutex) {
+    if (!qUIEvents || !qDisplayCmds || !qAudioCmds || !qRadioCmds || !xI2CMutex) {
         Serial.println("[ERROR] FreeRTOS queue/semaphore creation failed!");
         while(1) { delay(1000); }
     }
@@ -191,6 +150,7 @@ void setup() {
     xTaskCreatePinnedToCore(taskUI,      "UITask",      4096, NULL, 3, NULL, 1);
     xTaskCreatePinnedToCore(taskDisplay, "DisplayTask", 2048, NULL, 2, NULL, 1);
     xTaskCreatePinnedToCore(taskWiFi,    "WiFiTask",    8192, NULL, 1, NULL, 1);
+    xTaskCreatePinnedToCore(taskWeb,     "WebTask",     8192, NULL, 1, NULL, 1);
 
     Serial.println("[BOOT] All tasks started.");
 }
@@ -207,23 +167,9 @@ void loop() {
 // IMPLEMENTACJE TASKÓW — szkielety (wypełnimy w kolejnych modułach)
 // =============================================================================
 
-void taskAudio(void *pvParameters) {
-    // TODO: inicjalizacja ESP32-audioI2S
-    // TODO: połączenie z Wi-Fi i odtwarzanie streamu
-    Serial.println("[AudioTask] started");
-    for(;;) {
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
-}
+// taskAudio — implementacja w audio_task.cpp
 
-void taskRadioRF(void *pvParameters) {
-    // TODO: inicjalizacja SI4732 (PU2CLR)
-    // TODO: obsługa RDS, SSB patch
-    Serial.println("[RadioTask] started");
-    for(;;) {
-        vTaskDelay(pdMS_TO_TICKS(50));
-    }
-}
+// taskRadioRF — implementacja w radio_task.cpp
 
 void taskUI(void *pvParameters) {
     // TODO: obsługa enkodera (przerwania lub polling)
@@ -252,11 +198,4 @@ void taskDisplay(void *pvParameters) {
     }
 }
 
-void taskWiFi(void *pvParameters) {
-    // TODO: połączenie z Wi-Fi (credentials z NVS lub hardcode)
-    // TODO: lista stacji internetowych
-    Serial.println("[WiFiTask] started");
-    for(;;) {
-        vTaskDelay(pdMS_TO_TICKS(5000));
-    }
-}
+// taskWiFi — implementacja w wifi_task.cpp
