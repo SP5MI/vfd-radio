@@ -1,5 +1,7 @@
 <h1>Wimbi Radio</h1>
 
+![Wimbi_Radio logo](img/logo.jpg)
+
 Wimbi means “wave” in Swahili — a fitting name for a radio designed to cross boundaries and connect signals from around the world.
 
 Wimbi is a hybrid radio receiver capable of tuning into terrestrial broadcasts across HF and VHF bands, supporting FM, AM, and SSB modulation. It combines classic radio functionality with modern streaming capabilities, making it a versatile companion for everyday listening.
