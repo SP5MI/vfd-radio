@@ -1,0 +1,175 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); font-size: 13px; color: var(--color-text-primary); }
+table { width: 100%; border-collapse: collapse; }
+thead th { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--color-border-tertiary); text-transform: uppercase; letter-spacing: 0.04em; }
+td { padding: 5px 8px; border-bottom: 1px solid var(--color-border-tertiary); vertical-align: middle; line-height: 1.4; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--color-background-secondary); }
+.note { color: var(--color-text-tertiary); font-size: 11px; display: block; margin-top: 1px; }
+.qty { text-align: center; color: var(--color-text-secondary); width: 36px; }
+.price { text-align: right; white-space: nowrap; width: 90px; font-family: var(--font-mono); font-size: 12px; }
+.where { color: var(--color-text-secondary); font-size: 11px; width: 120px; }
+.tag { display: inline-block; font-size: 10px; font-weight: 500; padding: 1px 6px; border-radius: 4px; }
+.cpu   { background: #EEEDFE; color: #3C3489; }
+.rf    { background: #E1F5EE; color: #085041; }
+.audio { background: #FAEEDA; color: #633806; }
+.disp  { background: #E6F1FB; color: #0C447C; }
+.pwr   { background: #EAF3DE; color: #27500A; }
+.ic    { background: #FBEAF0; color: #72243E; }
+.pas   { background: #F1EFE8; color: #444441; }
+.have  { background: #E1F5EE; color: #085041; }
+.sec td { background: var(--color-background-secondary); font-weight: 500; font-size: 11px; color: var(--color-text-secondary); padding: 3px 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+.total td { font-weight: 500; border-top: 2px solid var(--color-border-primary) !important; }
+.warn { background: #FAEEDA; color: #633806; border-radius: 8px; padding: 8px 12px; font-size: 12px; margin-top: 12px; }
+.have-badge { background: #E1F5EE; color: #085041; font-size: 10px; font-weight: 500; padding: 1px 6px; border-radius: 4px; margin-left: 4px; }
+</style>
+<table>
+<thead><tr><th></th><th>Komponent</th><th class="qty">Szt.</th><th class="price">Cena est.</th><th class="where">Gdzie</th></tr></thead>
+<tbody>
+
+<tr class="sec"><td colspan="5">Jednostka główna</td></tr>
+<tr>
+  <td><span class="tag cpu">CPU</span></td>
+  <td>ESP32-S3 N16R8 devkit<span class="note">16MB flash, 8MB Octal PSRAM, Wi-Fi, BT, touch GPIO, I2C, I2S</span></td>
+  <td class="qty">1</td><td class="price">25–40 zł</td><td class="where">Allegro / Ali</td>
+</tr>
+
+<tr class="sec"><td colspan="5">Odbiornik RF</td></tr>
+<tr>
+  <td><span class="tag rf">RF</span></td>
+  <td>SI4732-A10-GS (SOIC-16)<span class="note">FM / AM / SW / LW / RDS — wyjście analogowe LOUT/ROUT do TS5A23157</span></td>
+  <td class="qty">1</td><td class="price">5–15 zł</td><td class="where">AliExpress</td>
+</tr>
+<tr>
+  <td><span class="tag rf">RF</span></td>
+  <td>Antena ferrytowa + gniazdo SMA (FM)<span class="note">Ferryt ~10×100 mm do AM/LW/SW, kabel RG174 do FM</span></td>
+  <td class="qty">1+1</td><td class="price">10–20 zł</td><td class="where">Ali / Allegro</td>
+</tr>
+<tr>
+  <td><span class="tag pas">PCB</span></td>
+  <td>Breakout SOIC-16 → DIP-16<span class="note">Adapter do prototypowania SI4732</span></td>
+  <td class="qty">1</td><td class="price">3–5 zł</td><td class="where">AliExpress</td>
+</tr>
+
+<tr class="sec"><td colspan="5">Audio — ścieżka cyfrowa (radio internetowe)</td></tr>
+<tr>
+  <td><span class="tag audio">DAC</span></td>
+  <td>PCM5102A — moduł I2S DAC stereo <span class="have-badge">masz</span><span class="note">Wyjście liniowe 2.1 VRMS stereo; BCLK=GPIO15, LRCK=GPIO16, DATA=GPIO17</span></td>
+  <td class="qty">1</td><td class="price">0 zł</td><td class="where">—</td>
+</tr>
+
+<tr class="sec"><td colspan="5">Audio — przełącznik analogowy</td></tr>
+<tr>
+  <td><span class="tag ic">SW</span></td>
+  <td>TS5A23157 — dual SPDT analog switch <span class="have-badge">masz</span><span class="note">Sterowany GPIO ESP32; przełącza między PCM5102A a SI4732 LOUT/ROUT</span></td>
+  <td class="qty">1</td><td class="price">0 zł</td><td class="where">—</td>
+</tr>
+
+<tr class="sec"><td colspan="5">Audio — wzmacniacz</td></tr>
+<tr>
+  <td><span class="tag audio">AMP</span></td>
+  <td>Wzmacniacz stereo klasy D (np. TPA3116D2, PAM8406)<span class="note">Wejście liniowe stereo z TS5A23157; TPA3116 = 2×50W/4Ω, PAM8406 = 2×5W</span></td>
+  <td class="qty">1</td><td class="price">15–35 zł</td><td class="where">Allegro / Ali</td>
+</tr>
+<tr>
+  <td><span class="tag audio">SPK</span></td>
+  <td>Głośniki stereo (para)<span class="note">4–8Ω, moc zależna od wybranego wzmacniacza</span></td>
+  <td class="qty">2</td><td class="price">20–40 zł</td><td class="where">Allegro / Ali</td>
+</tr>
+
+<tr class="sec"><td colspan="5">Wyświetlacz</td></tr>
+<tr>
+  <td><span class="tag disp">VFD</span></td>
+  <td>VFD 16LF01UA4 — moduł 12V, logika 5V<span class="note">16 znaków, 1 linia; max 400 mA @ 12V</span></td>
+  <td class="qty">1</td><td class="price">50–150 zł</td><td class="where">eBay / Ali</td>
+</tr>
+<tr>
+  <td><span class="tag cpu">MCU</span></td>
+  <td>Arduino Pro Mini 5V/16 MHz<span class="note">Slave I2C → sterowanie VFD (logika 5V)</span></td>
+  <td class="qty">1</td><td class="price">8–15 zł</td><td class="where">Allegro / Ali</td>
+</tr>
+<tr>
+  <td><span class="tag ic">LVL</span></td>
+  <td>Konwerter poziomów I2C 3.3V ↔ 5V (4-kan.)<span class="note">Między ESP32 a Arduino Pro Mini na SDA/SCL</span></td>
+  <td class="qty">1</td><td class="price">3–5 zł</td><td class="where">Allegro</td>
+</tr>
+
+<tr class="sec"><td colspan="5">Sterowanie</td></tr>
+<tr>
+  <td><span class="tag pas">ENC</span></td>
+  <td>Enkoder obrotowy z przyciskiem (KY-040)<span class="note">GPIO39/40/41 — strojenie, głośność, nawigacja</span></td>
+  <td class="qty">1</td><td class="price">5–10 zł</td><td class="where">Allegro / Ali</td>
+</tr>
+<tr>
+  <td><span class="tag pas">TCH</span></td>
+  <td>6× przycisk pojemnościowy — piny touch ESP32-S3<span class="note">GPIO1/2/4/5/6/7 — pady miedziane na PCB, bez dodatkowych IC</span></td>
+  <td class="qty">—</td><td class="price">0 zł</td><td class="where">wbudowane</td>
+</tr>
+
+<tr class="sec"><td colspan="5">Zasilanie</td></tr>
+<tr>
+  <td><span class="tag pwr">PWR</span></td>
+  <td>Zasilacz sieciowy 12V / min. 3A (DC 5.5/2.1)<span class="note">Magistrala 12V: VFD (400mA) + wzmacniacz + reszta przez przetworn.</span></td>
+  <td class="qty">1</td><td class="price">25–40 zł</td><td class="where">Allegro</td>
+</tr>
+<tr>
+  <td><span class="tag pwr">PWR</span></td>
+  <td>Przetwornica step-down 12V→5V (LM2596 / MP2307, min. 2A)<span class="note">Arduino, PCM5102A, TS5A23157</span></td>
+  <td class="qty">1</td><td class="price">5–8 zł</td><td class="where">Ali / Allegro</td>
+</tr>
+<tr>
+  <td><span class="tag pwr">PWR</span></td>
+  <td>LDO AMS1117-3.3 (lub moduł)<span class="note">ESP32-S3 i SI4732 — z wyjścia 5V przetwornicy</span></td>
+  <td class="qty">1</td><td class="price">1–3 zł</td><td class="where">AliExpress</td>
+</tr>
+<tr>
+  <td><span class="tag pas">PWR</span></td>
+  <td>Gniazdo DC 5.5/2.1 mm (panel)</td>
+  <td class="qty">1</td><td class="price">2–3 zł</td><td class="where">Allegro</td>
+</tr>
+
+<tr class="sec"><td colspan="5">Elementy pasywne</td></tr>
+<tr>
+  <td><span class="tag pas">PAS</span></td>
+  <td>Kondensatory 100 nF ceramic (bypass przy każdym IC)</td>
+  <td class="qty">10</td><td class="price">2 zł</td><td class="where">Ali / TME</td>
+</tr>
+<tr>
+  <td><span class="tag pas">PAS</span></td>
+  <td>Kondensatory 10 µF elektrolityczne</td>
+  <td class="qty">5</td><td class="price">2 zł</td><td class="where">Ali / TME</td>
+</tr>
+<tr>
+  <td><span class="tag pas">PAS</span></td>
+  <td>Kondensatory 100 µF elektrolityczne (wejście wzmacniacza)<span class="note">Blokowanie DC na wejściu liniowym wzmacniacza</span></td>
+  <td class="qty">2</td><td class="price">1 zł</td><td class="where">Ali / TME</td>
+</tr>
+<tr>
+  <td><span class="tag pas">PAS</span></td>
+  <td>Rezystory 4.7 kΩ (pull-up I2C na szynie 3.3V)</td>
+  <td class="qty">4</td><td class="price">1 zł</td><td class="where">Ali / TME</td>
+</tr>
+<tr>
+  <td><span class="tag pas">PAS</span></td>
+  <td>Rezystor 10 kΩ (pull-up SI4732 RESET)</td>
+  <td class="qty">1</td><td class="price">0.5 zł</td><td class="where">Ali / TME</td>
+</tr>
+<tr>
+  <td><span class="tag pas">PCB</span></td>
+  <td>Płytka prototypowa lub PCB (JLCPCB)</td>
+  <td class="qty">1</td><td class="price">10–50 zł</td><td class="where">Allegro / JLCPCB</td>
+</tr>
+
+<tr class="total">
+  <td colspan="3" style="font-size:12px; color: var(--color-text-secondary);">Razem (szacunek, bez elementów które masz)</td>
+  <td class="price">~175–440 zł</td>
+  <td class="where" style="font-size:11px; color: var(--color-text-tertiary);">VFD najtrudniejszy</td>
+</tr>
+
+</tbody>
+</table>
+<div class="warn">
+  Usunięto z BOM: 2× MAX98357A i 74HC4053 (zastąpione przez PCM5102A + TS5A23157 które już masz). Uwaga: PIN_I2S_SEL (GPIO18) w kodzie sterował 74HC4053 — teraz będzie sterował TS5A23157. Logika ta sama: LOW = internet, HIGH = RF.
+</div>
