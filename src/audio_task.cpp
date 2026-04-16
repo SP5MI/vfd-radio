@@ -10,10 +10,11 @@
 #include "audio_task.h"
 
 // =============================================================================
-// PINY I2S
+// PINY I2S !!!!!Popraw!!!!
+// PCM5102A nie ma pinu SD/SHDN jak MAX98357 
+// — wyciszanie odbywa się przez pin XSMT (active HIGH = normal, LOW = mute)
 // =============================================================================
 
-#define I2S_BCLK    15
 #define I2S_LRCLK   16
 #define I2S_DATA    17
 
