@@ -15,8 +15,20 @@
 // — wyciszanie odbywa się przez pin XSMT (active HIGH = normal, LOW = mute)
 // =============================================================================
 
+//=============================================================================
+// PCM5102A -  podłączenie SCK do masy pomoże w redukcji niechcianych szumów.
+// SCK - Serial Clock signal - linia zegarowa 
+// BCK - Bit Clock - informacja kiedy czytać dane z pinu danych (I2S_BCLK) 
+// DIN -  Data In wejście danych (I2S_DATA)
+// LCK - informacja dla DAC czy dane są dla lewego czy prawego (I2S_LRCLK)
+// XSMT - (active HIGH = normal, LOW = mute) Soft-Mute - pin do wyciszania, 
+//         można go podłączyć do GPIO i sterować programowo lub po prostu do 3.3V 
+//         jeśli nie potrzebujemy tej funkcji
+//=============================================================================
+
 #define I2S_LRCLK   16
 #define I2S_DATA    17
+#define I2S_BCLK    18
 
 // =============================================================================
 // STACJE RADIOWE
