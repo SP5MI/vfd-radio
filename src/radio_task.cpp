@@ -59,6 +59,14 @@ QueueHandle_t qRadioCmds = NULL;
 #define SSB_BFO_STEP     100        // Hz
 
 // =============================================================================
+// DEFINICJE STANOW SI47xx
+// =============================================================================
+
+#define FM_BAND_TYPE 0
+#define AM_BAND_TYPE 1
+#define SW_BAND_TYPE 1
+
+// =============================================================================
 // STAN LOKALNY
 // =============================================================================
 
@@ -146,7 +154,7 @@ static void startSSB(uint8_t ssbMode) {
     si4735.setSSBBfo(currentBFO);
     si4735.setSSBAudioBandwidth(1);
     si4735.setSBBSidebandCutoffFilter(0);
-    si4735.setSSBAvcAmMaxGain(48);
+    //si4735.setSSBAvcAmMaxGain(48);
     si4735.setVolume(gState.volume);
 
     Serial.printf("[RF] SSB %s @ %u kHz BFO=%d Hz\n",
