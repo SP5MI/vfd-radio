@@ -57,6 +57,8 @@ QueueHandle_t qRadioCmds = NULL;
 #define SSB_FREQ_MAX   30000        // kHz
 #define SSB_FREQ_DEF    7074        // kHz (FT8 40m)
 #define SSB_BFO_STEP     100        // Hz
+#define LSB                 1       // z API
+#define USB                 2
 
 // =============================================================================
 // DEFINICJE STANOW SI47xx
@@ -127,7 +129,7 @@ static void startAM() {
 
 static void startSW() {
     si4735.setup(PIN_SI4732_RESET, SW_BAND_TYPE);
-    si4735.setSW(SW_FREQ_MIN, SW_FREQ_MAX, (uint16_t)gState.frequency, SW_STEP);
+    si4735.setAM(SW_FREQ_MIN, SW_FREQ_MAX, (uint16_t)gState.frequency, SW_STEP);
     si4735.setVolume(gState.volume);
     Serial.printf("[RF] SW @ %u kHz\n", gState.frequency);
 }
@@ -273,9 +275,9 @@ static void processRDS() {
     if (millis() - lastRdsCheck < 200) return;
     lastRdsCheck = millis();
 
-    if (!si4735.getRdsReady()) return;
+    //if (!si4735.getRdsReady()) return; takiego czegoś nie ma w API
     si4735.getRdsStatus();
-    if (!si4735.getRdsSystem()) return;
+    if (!si4735.getRdsReceived()) return;
 
     // Nazwa stacji PS (8 znaków)
     char *ps = si4735.getRdsText0A();
