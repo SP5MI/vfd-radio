@@ -6,3 +6,4 @@ logs
 managed_components
 # WiFi credentials - never commit:
 include/wifi_config.h
+CLAUDE.md
