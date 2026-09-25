@@ -8,11 +8,12 @@
 // TRYBY PRACY
 // =============================================================================
 
+// MODE_AM obejmuje całe pasmo AM obsługiwane przez SI4732 (LW/MW/SW),
+// bo w bibliotece PU2CLR to jedna funkcja odbiornika (AM_CURRENT_MODE).
 typedef enum {
     MODE_INTERNET_RADIO = 0,
     MODE_FM,
     MODE_AM,
-    MODE_SW,
     MODE_SSB_LSB,
     MODE_SSB_USB
 } RadioMode_t;

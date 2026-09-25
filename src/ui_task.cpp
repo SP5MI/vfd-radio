@@ -122,7 +122,7 @@ static void processEvent(UIEvent_t evt) {
             Serial.println("[UI] Tryb: FM");
             break;
 
-        // Touch 2 — tryb AM/SW
+        // Touch 2 — tryb AM (LW/MW/SW)
         case UI_EVENT_TOUCH_2:
             gState.mode = MODE_AM;
             Serial.println("[UI] Tryb: AM");

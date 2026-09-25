@@ -98,7 +98,7 @@ static void setupRoutes() {
     );
 
     // --- Przełącz tryb ---
-    // Body: {"mode": 0}  (0=internet, 1=FM, 2=AM, 3=SW, 4=SSB_LSB, 5=SSB_USB)
+    // Body: {"mode": 0}  (0=internet, 1=FM, 2=AM(LW/MW/SW), 3=SSB_LSB, 4=SSB_USB)
     server.on("/api/mode", HTTP_POST, [](AsyncWebServerRequest *req) {}, nullptr,
         [](AsyncWebServerRequest *req, uint8_t *data, size_t len, size_t index, size_t total) {
             JsonDocument doc;
@@ -107,7 +107,7 @@ static void setupRoutes() {
                 return;
             }
             int mode = doc["mode"] | -1;
-            if (mode < 0 || mode > 5) {
+            if (mode < 0 || mode > (int)MODE_SSB_USB) {
                 req->send(400, "application/json", "{\"error\":\"Nieprawidłowy tryb\"}");
                 return;
             }
@@ -156,8 +156,10 @@ static void setupRoutes() {
         req->send(200, "application/json", "{\"ok\":true}");
     });
 
-    // --- Ustaw częstotliwość (FM/AM/SW) ---
-    // Body: {"frequency": 100000}  (kHz, np. 100000 = 100.0 MHz)
+    // --- Ustaw częstotliwość (FM/AM/SSB) ---
+    // Body: {"frequency": 10000}
+    // FM  — jednostki 10 kHz (10000 = 100.0 MHz)
+    // AM/SSB — kHz (999 = 999 kHz, 7074 = 7.074 MHz)
     server.on("/api/frequency", HTTP_POST, [](AsyncWebServerRequest *req) {}, nullptr,
         [](AsyncWebServerRequest *req, uint8_t *data, size_t len, size_t index, size_t total) {
             JsonDocument doc;

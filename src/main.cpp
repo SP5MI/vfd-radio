@@ -26,7 +26,7 @@
 
 // --- 74HC4053 — selektor źródła I2S ---
 // LOW  = ESP32 (radio internetowe)
-// HIGH = SI4732 (FM/AM/SW/SSB)
+// HIGH = SI4732 (FM/AM/SSB)
 #define PIN_I2S_SEL         18
 
 // --- I2C (magistrala: SI4732 + Arduino VFD) ---
@@ -58,7 +58,7 @@ volatile RadioState_t gState;
 
 void initState() {
     gState.mode          = MODE_INTERNET_RADIO;
-    gState.frequency     = 100000;  // 100.0 MHz jako domyślne FM
+    gState.frequency     = 10000;   // 100.0 MHz — FM w jednostkach 10 kHz
     gState.volume        = 40;
     gState.muted         = false;
     gState.wifiConnected = false;

@@ -14,11 +14,14 @@
 // =============================================================================
 
 static void sendDisplay(const char *line1, const char *line2) {
+    // magistrala I2C dzielona z SI4732 (taskRadioRF)
+    xSemaphoreTake(xI2CMutex, portMAX_DELAY);
     Wire.beginTransmission(I2C_ADDR_ARDUINO);
     Wire.write(0x01);               // komenda: ustaw tekst
     Wire.write((uint8_t*)line1, 16);
     Wire.write((uint8_t*)line2, 16);
     uint8_t err = Wire.endTransmission();
+    xSemaphoreGive(xI2CMutex);
     if (err != 0) {
         Serial.printf("[Display] I2C error: %d\n", err);
     }
@@ -39,18 +42,18 @@ static void buildDisplayText(char *line1, char *line2) {
             break;
 
         case MODE_FM:
-            snprintf(line1, 17, "FM %6.1f MHz   ", gState.frequency / 1000.0f);
+            // częstotliwość FM w jednostkach 10 kHz (10000 = 100.0 MHz)
+            snprintf(line1, 17, "FM %6.1f MHz   ", gState.frequency / 100.0f);
             snprintf(line2, 17, "%-16s", gState.stationName[0] ? gState.stationName : "                ");
             break;
 
+        // AM = LW/MW/SW — jeden tryb, etykieta zależy od zakresu
         case MODE_AM:
-            snprintf(line1, 17, "AM %7u kHz  ", gState.frequency);
+            if (gState.frequency > 1710)
+                snprintf(line1, 17, "SW %6.3f MHz  ", gState.frequency / 1000.0f);
+            else
+                snprintf(line1, 17, "AM %5u kHz   ", gState.frequency);
             snprintf(line2, 17, "%-16s", gState.rdsText[0] ? gState.rdsText : "                ");
-            break;
-
-        case MODE_SW:
-            snprintf(line1, 17, "SW %6.3f MHz  ", gState.frequency / 1000.0f);
-            snprintf(line2, 17, "%-16s", gState.stationName[0] ? gState.stationName : "                ");
             break;
 
         case MODE_SSB_LSB:
